@@ -45,13 +45,14 @@ body {
     transition: var(--transition);
 }
 
-.app{
-        width: 90%;
+.app {
+    width: 90%;
     /* width: 1200px; */
     margin: 0 auto;
     padding: 0 1rem;
 
 }
+
 .container {
     display: flex;
     flex-direction: column;
@@ -61,7 +62,7 @@ body {
 }
 
 /* Header */
-/* .header {
+.header {
     background: linear-gradient(135deg, #111827 0%, #334155 100%);
     color: white;
     padding: 1rem 0;
@@ -108,7 +109,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
-} */
+}
 
 /* Buttons */
 .btn {
@@ -192,9 +193,10 @@ body {
 /* Stats Cards */
 .statsGrid {
     display: flex;
-
     gap: 1.5rem;
     margin: 2rem 0;
+    width: 100%;
+    justify-content: space-between;
 }
 
 .statCard {
@@ -205,6 +207,7 @@ body {
     box-shadow: var(--shadow);
     border: 1px solid var(--border-color);
     transition: var(--transition);
+    width: 300px;
 }
 
 .statCard:hover {
@@ -305,6 +308,7 @@ body {
     gap: 1rem;
     margin-bottom: 2rem;
     align-items: center;
+    width: 100%;
 }
 
 .searchContainer {
@@ -363,6 +367,7 @@ body {
     border-radius: var(--radius);
     border: 1px solid var(--border-color);
     overflow: hidden;
+    width: 100%;
 }
 
 .table {
@@ -411,6 +416,10 @@ body {
     font-size: 0.8rem;
 }
 
+#productsContainer {
+    width: 100%;
+}
+
 .statusBadge {
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -442,6 +451,21 @@ body {
     border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
+.estoque {
+    color: green;
+}
+
+.descricao {
+    color: gray
+}
+
+ /* .editDeleteBtn {
+
+    display: flex;
+    gap: 5px; 
+
+}  */
+
 /* Modal */
 .modalOverlay {
     position: fixed;
@@ -467,7 +491,8 @@ body {
     font-size: 12px;
 }
 
-.modal, .editModal {
+.modal,
+.editModal {
     background: var(--surface);
     border-radius: var(--radius);
     max-width: 500px;
@@ -478,7 +503,8 @@ body {
     transition: var(--transition);
 }
 
-.modalOverlay.active .modal, .editModal {
+.modalOverlay.active .modal,
+.editModal {
     transform: scale(1);
 }
 
@@ -775,6 +801,8 @@ body {
     .tableContainer {
         overflow-x: auto;
     }
+
+
 
     .formRow,
     .formRow3 {

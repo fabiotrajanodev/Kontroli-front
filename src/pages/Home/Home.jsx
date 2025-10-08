@@ -8,7 +8,7 @@ export default function Home() {
                 <div className={Styles.container}>
                     <div className={Styles.headerContent}>
                         <div className={Styles.logo}>
-                            <a href="/index.html">
+                            <a href="/">
                                 <img src="/img/logo_caixa.png" alt="" width="60px" />
                             </a>
                             <span className={Styles.logoText}>Kontroli</span>
@@ -22,8 +22,9 @@ export default function Home() {
 
                         <div className={Styles.navButtons}>
                             <a href="#" className={`${Styles.btn} ${Styles.btnOutline}`}>Quero testar</a>
-                            <a href="/pages/login/login.html" className={`${Styles.btn} ${Styles.btnPrimary}`}>Login</a>
+                            <a href="/login" className={`${Styles.btn} ${Styles.btnPrimary}`}>Login</a>
                         </div>
+
                     </div>
                 </div>
             </header>
