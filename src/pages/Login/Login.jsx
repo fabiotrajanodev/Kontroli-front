@@ -1,35 +1,58 @@
+
 import Styles from "./login.module.css"
 import { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from 'react-router-dom';
+
 
 
 
 export default function login() {
 
-    const [mensagemLogin, setMensagemLogin] = useState(0);
     const [showPassword, setShowPassword] = useState(false);
-    const [password, setPassword] = useState("");
 
-    let container = document.querySelector("#erro")
-    let mensagem = (<p style='color: white;'>Login ou senha incorretos!</p>)
 
-    const loginForm = async (e) => {
+    const navigate = useNavigate();
+    const handleClick = () => {
+        navigate('/admin'); // Redireciona para a rota /dashboard
+    };
 
-        const usuario = document.getElementById("email").value;
-        const senha = document.getElementById("password").value;
+    const handleClickFabio = () => {
+        navigate('/admin'); // Redireciona para a rota /dashboard
+    };
 
-        const usuarioAdmin = "admin@kontroli.com";
-        const senhaAdmin = "123456";
+    const handleClickPaula = () => {
+        navigate('/vendas'); // Redireciona para a rota /dashboard
+    };
 
-        const usuarioVendedor = "vendedor@kontroli.com";
-        const senhaVendedor = "vendedor";
+    const login = async () => {
+        let endpoint = "http://127.0.0.1:3000/users/login";
 
-        if (usuario === usuarioAdmin && senha === senhaAdmin || usuario === usuarioVendedor && senha === senhaVendedor) {
-            alert("Login realizado com sucesso!");
-            window.location.href = "/Admin"
-        } else {
-            alert("Login ou senha incorretos!");
+        let email = document.querySelector("#email").value
+        let password = document.querySelector("#password").value
+
+
+        let dados = {
+            "email": email,
+            "password": password
         }
+
+
+        let resp = await axios.post(endpoint, dados)
+        let data = await resp.data
+
+
+        if (data === "senha correta") {
+            handleClick()
+
+        } else {
+            document.querySelector("#erro").innerText = "Login ou senha incorretos"
+        }
+
+
     }
+
+
 
     return (
         <>
@@ -53,21 +76,20 @@ export default function login() {
                             <label className={Styles.formLabel}>Senha</label>
                             <div className={Styles.passwordContainer}>
                                 <input
-                                    type={showPassword ? "text" : "password"}   // alterna entre password/texto
+                                    type={showPassword ? "text" : "password"}
                                     id="password"
                                     name="password"
                                     className={Styles.formInput}
                                     placeholder="Digite sua senha"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
                                     required
                                 />
 
                                 <button
                                     type="button"
                                     className={Styles.passwordToggle}
-                                    onClick={() => setShowPassword(!showPassword)} // faz o botão alternar
+                                    onClick={() => setShowPassword(!showPassword)}
                                 >
+
                                     <svg
                                         width="16"
                                         height="16"
@@ -99,7 +121,7 @@ export default function login() {
                             <a href="#" id="forgotPasswordLink">Esqueci minha senha</a>
                         </div>
 
-                        <button className={Styles.loginButton} id="loginButton" onClick={loginForm}>
+                        <button className={Styles.loginButton} id="loginButton" onClick={login}>
                             Entrar
                         </button>
                         <div id="erro">

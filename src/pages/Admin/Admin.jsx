@@ -10,7 +10,7 @@ import {
   faPlus,
   faChartBar,
 } from "@fortawesome/free-solid-svg-icons";
-
+import Navbar from "../components/Navbar/Navbar";
 import Styles from "./admin.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -39,9 +39,28 @@ export default function Admin() {
     document.querySelector("#productModal").style.display = "flex"
   }
 
+  function openCategoryModal() {
+    document.querySelector("#categoryModal").style.display = "flex"
+  }
+
+
+  function opendeleteCategoryModal() {
+    document.querySelector("#deletecategoryModal").style.display = "flex"
+  }
+
+
   function fecharModal() {
     document.querySelector("#productModal").style.display = "none"
   }
+
+  function fecharCategoryModal() {
+    document.querySelector("#categoryModal").style.display = "none"
+  }
+
+  function fechardeleteCategoryModal() {
+    document.querySelector("#deletecategoryModal").style.display = "none"
+  }
+
 
   function openEditModal(e) {
     document.querySelector("#productEditModal").style.display = "flex"
@@ -104,11 +123,29 @@ export default function Admin() {
   }
 
   // requisições HTTP
-  const get = async () => {
+  const get = async (dados) => {
+    if (document.querySelector("#searchInput").value != "") {
+      setProdutos(dados)
+      return
+    }
+    if (document.querySelector("#categoryFilter").value != "") {
+      setProdutos(dados)
+      return
+    }
+
+
+
+    // if (data.length > 0) {
+    //   setProdutos(data)
+    // } else {
+
     let endpoint = "http://127.0.0.1:3000/products/get";
     let resp = await axios.get(endpoint);
     let data = await resp.data
     setProdutos(data)
+
+    // }
+
 
     let valores = []
     data.map(item => {
@@ -128,8 +165,8 @@ export default function Admin() {
 
     let valoresDinheiro = []
     data.map(item => {
-        let valorDinheiro = item.price
-        valoresDinheiro.push(Number(valorDinheiro))
+      let valorDinheiro = item.price
+      valoresDinheiro.push(Number(valorDinheiro))
 
     })
 
@@ -137,9 +174,9 @@ export default function Admin() {
 
     const valortTotal = somaDinheiro;
     const valorFormatado = valortTotal.toLocaleString('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
+      style: 'currency',
+      currency: 'BRL',
+      minimumFractionDigits: 2,
     })
     setValorTotal(valorFormatado)
   }
@@ -160,7 +197,7 @@ export default function Admin() {
     let novoProd = {
       'name': name,
       'code': code,
-      'category': category,
+      'category_id': category,
       'quantity': quantity,
       'min_stock': minStock,
       'price': price,
@@ -199,7 +236,7 @@ export default function Admin() {
     let novoProd = {
       'name': name,
       'code': code,
-      'category': category,
+      'category_id': category,
       'quantity': quantity,
       'min_stock': minStock,
       'price': price,
@@ -213,52 +250,118 @@ export default function Admin() {
 
   useEffect(() => {
     get()
+    getCategory()
   }, [])
 
 
+  // useEffect(() => {
+  //   get(produtos)
+  // }, [produtos])
+
+
+
+
+
+  const search = (e) => {
+    let inputValue = e.target.value
+
+    let filtrados = produtos.filter(item => {
+      return item.name.toLowerCase().includes(inputValue)
+    })
+
+
+    if (inputValue === "") {
+      get()
+      return
+    }
+    setProdutos(filtrados)
+
+  }
+
+
+  const returnProducts = async () => {
+    let endpoint = "http://127.0.0.1:3000/products/get";
+    let resp = await axios.get(endpoint);
+    let data = await resp.data
+    return data
+  }
+
+  const searchCategory = async (e) => {
+
+    let return_products = await returnProducts()
+
+    let inputValue = e.target.value
+
+    let filtrados = return_products.filter(item => item.category_id == inputValue)
+
+    if (!filtrados) {
+      get()
+      // setProdutos(produtos)
+    } else {
+      get(filtrados)
+      // setProdutos(filtrados)
+    }
+
+
+  }
+
+
+
+  // MOSTRAR CATEGORIAS NO DROPDOWN
+  const [category, setCategory] = useState([]);
+
+  const getCategory = async () => {
+    const endpoint = "http://127.0.0.1:3000/category/get";
+    const resp = await axios.get(endpoint);
+    setCategory(resp.data)
+  }
+
+
+
+  // ADD CATEGORIA
+  //POST
+  const addCategory = async () => {
+    let endpoint = "http://127.0.0.1:3000/category/post";
+
+    let category = document.querySelector("#categoryNameAdd").value
+
+    let novaCategory = {
+      'name': category
+    }
+
+    let resp = await axios.post(endpoint, novaCategory);
+
+    window.location.reload()
+  }
+
+
+  // EXCLUIR CATEGORIA
+  //DELETE
+  // const deleteCategory = async (e) => {
+  //   let inputValue = e.target.value
+  //   let category = document.querySelector("#productCategory").value
+  //   let endpoint = `http://127.0.0.1:3000/category/delete/${id}`;
+
+  //   let resp = await axios.delete(endpoint);
+
+  //   get()
+  // }
+
+  const deleteCategory = async () => {
+    // pega o valor da categoria selecionada no dropdown
+    const category_id = document.querySelector("#deleteCategory").value;
+    const endpoint = `http://127.0.0.1:3000/category/delete/${category_id}`;
+    const resp = await axios.delete(endpoint);
+
+    window.location.reload();
+  };
 
 
 
 
   return (
     <>
-      <header className={Styles.header}>
-        <div className={Styles.container}>
-          <div className={Styles.headerContent}>
-            <div className={Styles.logo}>
-              <a href="/">
-                <img src="/img/logo_caixa.png" alt="" width="60px" />
-              </a>
-              <span className={Styles.logoText}>Kontroli</span>
-            </div>
-            <div className={Styles.headerActions}>
-
-              <div className={Styles.separator}></div>
-              <a href="/"> <button className={`${Styles.btn} ${Styles.btnGhost}`}>
-                Logout
-                <svg
-                  className={Styles.icon}
-                  fill="none"
-                  stroke="white"
-                  viewBox="0 0 24 24"
-                  width="12"
-                  height="12"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth="2"
-                    d="M15 3h4a2 2 0 012 2v14a2 2 0 01-2 2h-4M10 17l5-5-5-5M15 12H3"
-                  />
-                </svg>
-              </button>
-              </a>
-            </div>
-          </div>
-        </div>
-      </header>
-
-
+      <Navbar />
 
       <div className={Styles.app}>
         <main className={Styles.container}>
@@ -303,7 +406,7 @@ export default function Admin() {
                 <div className={Styles.statInfo}>
                   <h3>Estoque Baixo</h3>
                   <p className={Styles.value} id="lowStockCount">
-                    { lowStock}
+                    {lowStock}
                   </p>
                 </div>
                 <div className={`${Styles.statIcon} ${Styles.statIconRed}`}>
@@ -337,25 +440,53 @@ export default function Admin() {
                 id="searchInput"
                 className={Styles.searchInput}
                 placeholder="Buscar por nome ou código..."
+                onKeyUp={search}
               />
             </div>
 
+
+
+
+
             <div className={Styles.selectContainer}>
-              <select id="categoryFilter" className={Styles.select}>
-                <option value="all">Todas categorias</option>
+              <select id="categoryFilter" className={Styles.select} onChange={searchCategory}>
+                <option value="">Todas categorias</option>
+                {
+                  category.map(item => {
+                    return <option value={item.category_id}>{item.name}</option>
+
+                  })
+                }
+
               </select>
             </div>
 
-            <button className={`${Styles.btn} ${Styles.btnSecondary}`}>
-              <FontAwesomeIcon icon={faChartBar} />
-              Relatórios
+
+
+            <button
+              id="addProductBtn" className={`${Styles.btn} ${Styles.btn}`} onClick={openCategoryModal}>
+              <FontAwesomeIcon icon={faPlus} />
+              Adicionar Categoria
             </button>
+
+            <button
+              id="addProductBtn" className={`${Styles.btn} ${Styles.btn}`} onClick={opendeleteCategoryModal}>
+              <FontAwesomeIcon icon={faPlus} />
+              Excluir Categoria
+            </button>
+
+            {/* 
+            <a href="/relatorio"><button className={`${Styles.btn} ${Styles.btnSecondary}`}>
+              <FontAwesomeIcon  icon={faChartBar} />
+              Relatórios
+            </button></a> */}
 
             <button
               id="addProductBtn" className={`${Styles.btn} ${Styles.btnPrimary}`} onClick={openModal}>
               <FontAwesomeIcon icon={faPlus} />
               Adicionar Produto
             </button>
+
           </div>
 
           {/* TABLE */}
@@ -406,15 +537,17 @@ export default function Admin() {
                           <p className={Styles.descricao} id={`descriptionProduto___${item.id}`}>{item.description}</p>
                         </td>
                         <td id={`codigoProduto___${item.id}`}>{item.code}</td>
-                        <td id={`categoriaProduto___${item.id}`}>{item.category}</td>
+                        <td id={`categoriaProduto___${item.id}`}>{item.name_category}</td>
                         <td id={`quantidadeProduto___${item.id}`}>{item.quantity}</td>
                         <td id={`minStockProduto___${item.id}`}>{item.min_stock}</td>
                         <td id={`priceProduto___${item.id}`}>{valorFormatado}</td>
                         <td>{status}</td>
-                        
+
                         <td className={Styles.editDeleteBtn}>
-                          <button type="button" className={`${Styles.btn} ${Styles.btnSm}`} onClick={openEditModal} id={`editProduct___${item.id}`}>Editar</button>
-                          <button type="button" className={`${Styles.btn} ${Styles.btnDanger} ${Styles.btnSm}`} id={`deleteProduct___${item.id}`} onClick={del}>Excluir</button>
+                          <div className={Styles.butt}>
+                            <button type="button" className={`${Styles.btn} ${Styles.btnSm}`} onClick={openEditModal} id={`editProduct___${item.id}`}>Editar</button>
+                            <button type="button" className={`${Styles.btn} ${Styles.btnDanger} ${Styles.btnSm}`} id={`deleteProduct___${item.id}`} onClick={del}>Excluir</button>
+                          </div>
                         </td>
                       </tr>
                     )
@@ -435,10 +568,10 @@ export default function Admin() {
               Comece adicionando produtos ao seu estoque
             </p>
           </div>
-        </main>
+        </main >
 
         {/* MODAL - ADICIONAR PRODUTO */}
-        <div id="productModal" className={Styles.modalOverlay}>
+        < div id="productModal" className={Styles.modalOverlay} >
           <div className={Styles.modal}>
             <div className={Styles.modalHeader}>
               <h2 className={Styles.modalTitle} id="modalTitle">
@@ -476,6 +609,7 @@ export default function Admin() {
                   </div>
                 </div>
 
+
                 <div className={Styles.formGroup}>
                   <label
                     htmlFor="productCategory"
@@ -489,13 +623,13 @@ export default function Admin() {
                     required
                   >
                     <option value="">Selecione uma categoria</option>
-                    <option value="Eletrônicos">Eletrônicos</option>
-                    <option value="Periféricos">Periféricos</option>
-                    <option value="Móveis">Móveis</option>
-                    <option value="Roupas">Roupas</option>
-                    <option value="Livros">Livros</option>
-                    <option value="Alimentação">Alimentação</option>
-                    <option value="Alcoólicos">Alcoólicos</option>
+
+                    {
+                      category.map(item => {
+                        return <option value={item.category_id}>{item.name}</option>
+
+                      })
+                    }
                   </select>
                 </div>
 
@@ -586,10 +720,10 @@ export default function Admin() {
               </div>
             </div>
           </div>
-        </div>
+        </div >
 
         {/* MODAL - EDITAR PRODUTO */}
-        <div id="productEditModal" className={Styles.modalOverlay}>
+        < div id="productEditModal" className={Styles.modalOverlay} >
           <div className={Styles.editModal}>
             <div className={Styles.modalHeader}>
               <h2 className={Styles.modalTitle} id="modalTitle">
@@ -630,6 +764,7 @@ export default function Admin() {
                   </div>
                 </div>
 
+
                 <div className={Styles.formGroup}>
                   <label
                     htmlFor="productCategory"
@@ -639,21 +774,20 @@ export default function Admin() {
                   </label>
                   <select
                     id="productCategoryEdit"
-                    value={categoryAnterior}
-                    onChange={stateCategory}
                     className={Styles.formSelect}
                     required
                   >
                     <option value="">Selecione uma categoria</option>
-                    <option value="Eletrônicos">Eletrônicos</option>
-                    <option value="Periféricos">Periféricos</option>
-                    <option value="Móveis">Móveis</option>
-                    <option value="Roupas">Roupas</option>
-                    <option value="Livros">Livros</option>
-                    <option value="Alimentação">Alimentação</option>
-                    <option value="Alcoólicos">Alcoólicos</option>
+
+                    {
+                      category.map(item => {
+                        return <option value={item.category_id}>{item.name}</option>
+
+                      })
+                    }
                   </select>
                 </div>
+
 
                 <div className={Styles.formRow3}>
                   <div className={Styles.formGroup}>
@@ -750,7 +884,111 @@ export default function Admin() {
               </div>
             </div>
           </div>
-        </div>
+        </div >
+
+        {/* MODAL - ADD CATEGORIA */}
+        < div id="categoryModal" className={Styles.modalOverlay} >
+          <div className={Styles.modal}>
+            <div className={Styles.modalHeader}>
+              <h2 className={Styles.modalTitle} id="modalTitle">
+                Adicionar Nova Categoria
+              </h2>
+            </div>
+
+            <div id="productForm">
+              <div className={Styles.modalContent}>
+                <div className={Styles.formGroup}>
+                  <label
+                    htmlFor="productCategory"
+                    className={Styles.formLabel}>
+                    Categoria *
+                  </label>
+                  <div className={Styles.formGroup}>
+                    <input
+                      type="text"
+                      id="categoryNameAdd"
+                      value={nomeAnterior}
+                      onChange={stateName}
+                      className={Styles.formInput}
+                      placeholder="Ex: Roupas"
+                      required
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className={Styles.modalFooter}>
+              <button
+                type="button"
+                id="cancelBtn"
+                className={`${Styles.btn} ${Styles.btnSecondary}`}
+                onClick={fecharCategoryModal}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                id="saveBtn"
+                className={`${Styles.btn} ${Styles.btnPrimary}`}
+                onClick={addCategory}>
+                Adicionar Categoria
+              </button>
+            </div>
+          </div>
+        </div >
+
+        {/* MODAL - EXCLUIR CATEGORIA */}
+        < div id="deletecategoryModal" className={Styles.modalOverlay} >
+          <div className={Styles.modal}>
+            <div className={Styles.modalHeader}>
+              <h2 className={Styles.modalTitle} id="modalTitle">
+                Excluir Categoria
+              </h2>
+            </div>
+
+            <div className={Styles.formGroup}>
+              <label
+                htmlFor="deleteCategory"
+                className={Styles.formLabel}
+              >
+                Escolha abaixo qual categoria deseja excluir *
+              </label>
+              <select
+                id="deleteCategory"
+                className={Styles.formSelect}
+                required
+              >
+                <option value="">Selecione uma categoria</option>
+
+                {
+                  category.map(item => {
+                    return <option value={item.category_id}>{item.name}</option>
+
+                  })
+                }
+              </select>
+            </div>
+
+            <div className={Styles.modalFooter}>
+              <button
+                type="button"
+                id="cancelBtn"
+                className={`${Styles.btn} ${Styles.btnSecondary}`}
+                onClick={fechardeleteCategoryModal}
+              >
+                Cancelar
+              </button>
+              <button
+                type="submit"
+                id="saveBtn"
+                className={`${Styles.btn} ${Styles.btnPrimary}`}
+                onClick={deleteCategory}>
+                Excluir Categoria
+              </button>
+            </div>
+          </div>
+        </div >
       </div >
     </>
   );
