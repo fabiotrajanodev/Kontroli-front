@@ -11,7 +11,7 @@ import {
   faChartBar,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar/Navbar";
-import Styles from "./Admin.module.css";
+import Styles from "./admin.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
