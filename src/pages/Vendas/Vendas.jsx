@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import Styles from "./Vendas.module.css";
+import Styles from "./vendas.module.css";
 
 import Navbar from "../components/Navbar/Navbar";
 
