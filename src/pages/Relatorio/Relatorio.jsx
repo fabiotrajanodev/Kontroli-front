@@ -3,7 +3,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Styles from "./Relatorio.module.css"
+import Styles from "./relatorio.module.css"
 import Navbar from "../components/Navbar/Navbar";
 import axios from "axios";
 
