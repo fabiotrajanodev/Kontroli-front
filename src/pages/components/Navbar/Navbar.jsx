@@ -1,4 +1,4 @@
-import Styles from "./navbar.module.css"
+import Styles from "./Navbar.module.css"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faSignOutAlt,

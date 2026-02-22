@@ -11,7 +11,7 @@ import {
   faChartBar,
 } from "@fortawesome/free-solid-svg-icons";
 import Navbar from "../components/Navbar/Navbar";
-import Styles from "./admin.module.css";
+import Styles from "./Admin.module.css";
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -139,7 +139,7 @@ export default function Admin() {
     //   setProdutos(data)
     // } else {
 
-    let endpoint = "http://127.0.0.1:3000/products/get";
+    let endpoint = "https://kontroli-back.onrender.com/products/get";
     let resp = await axios.get(endpoint);
     let data = await resp.data
     setProdutos(data)
@@ -183,7 +183,7 @@ export default function Admin() {
 
   //POST
   const post = async () => {
-    let endpoint = "http://127.0.0.1:3000/products/post";
+    let endpoint = "https://kontroli-back.onrender.com/products/post";
 
     let name = document.querySelector("#productName").value
     let code = document.querySelector("#productCode").value
@@ -213,7 +213,7 @@ export default function Admin() {
   const del = async (e) => {
     let idCompleto = e.currentTarget.id
     let id = idCompleto.split("___")[1]
-    let endpoint = `http://127.0.0.1:3000/products/delete/${id}`;
+    let endpoint = `https://kontroli-back.onrender.com/products/delete/${id}`;
     let resp = await axios.delete(endpoint);
 
     get()
@@ -223,7 +223,7 @@ export default function Admin() {
   const put = async (e) => {
     let idCompleto = e.currentTarget.id
     let id = idCompleto.split("___")[1]
-    let endpoint = `http://127.0.0.1:3000/products/put/${id}`;
+    let endpoint = `https://kontroli-back.onrender.com/products/put/${id}`;
 
     let name = document.querySelector("#productNameEdit").value
     let code = document.querySelector("#productCodeEdit").value
@@ -280,7 +280,7 @@ export default function Admin() {
 
 
   const returnProducts = async () => {
-    let endpoint = "http://127.0.0.1:3000/products/get";
+    let endpoint = "https://kontroli-back.onrender.com/products/get";
     let resp = await axios.get(endpoint);
     let data = await resp.data
     return data
@@ -311,7 +311,7 @@ export default function Admin() {
   const [category, setCategory] = useState([]);
 
   const getCategory = async () => {
-    const endpoint = "http://127.0.0.1:3000/category/get";
+    const endpoint = "https://kontroli-back.onrender.com/category/get";
     const resp = await axios.get(endpoint);
     setCategory(resp.data)
   }
@@ -321,7 +321,7 @@ export default function Admin() {
   // ADD CATEGORIA
   //POST
   const addCategory = async () => {
-    let endpoint = "http://127.0.0.1:3000/category/post";
+    let endpoint = "https://kontroli-back.onrender.com/category/post";
 
     let category = document.querySelector("#categoryNameAdd").value
 
@@ -340,7 +340,7 @@ export default function Admin() {
   // const deleteCategory = async (e) => {
   //   let inputValue = e.target.value
   //   let category = document.querySelector("#productCategory").value
-  //   let endpoint = `http://127.0.0.1:3000/category/delete/${id}`;
+  //   let endpoint = `https://kontroli-back.onrender.com/category/delete/${id}`;
 
   //   let resp = await axios.delete(endpoint);
 
@@ -350,7 +350,7 @@ export default function Admin() {
   const deleteCategory = async () => {
     // pega o valor da categoria selecionada no dropdown
     const category_id = document.querySelector("#deleteCategory").value;
-    const endpoint = `http://127.0.0.1:3000/category/delete/${category_id}`;
+    const endpoint = `https://kontroli-back.onrender.com/category/delete/${category_id}`;
     const resp = await axios.delete(endpoint);
 
     window.location.reload();

@@ -26,7 +26,7 @@ export default function login() {
     };
 
     const login = async () => {
-        let endpoint = "http://127.0.0.1:3000/users/login";
+        let endpoint = "https://kontroli-back.onrender.com/users/login";
 
         let email = document.querySelector("#email").value
         let password = document.querySelector("#password").value

@@ -15,11 +15,11 @@ export default function Vendas() {
 
     // code, price, quantity, seller, date
     const get = async () => {
-        let endpoint = "http://127.0.0.1:3000/products/get";
+        let endpoint = "https://kontroli-back.onrender.com/products/get";
         let resp = await axios.get(endpoint);
         setProdutos(resp.data);
 
-        let endpointSeller = "http://127.0.0.1:3000/users/get";
+        let endpointSeller = "https://kontroli-back.onrender.com/users/get";
         let respSeller = await axios.get(endpointSeller);
         setSeller(respSeller.data);
 
@@ -93,7 +93,7 @@ export default function Vendas() {
     );
 
     const postVenda = async () => {
-        let endpoint = "http://127.0.0.1:3000/report/post";
+        let endpoint = "https://kontroli-back.onrender.com/report/post";
 
         if (carrinho.length === 0) {
             alert("O carrinho está vazio. Adicione produtos para finalizar a venda.");
@@ -115,7 +115,7 @@ export default function Vendas() {
 
             let editQuantity = venda.quantity - venda.quantidade
 
-            let endpointPut = `http://127.0.0.1:3000/products/put/${venda.id}`;
+            let endpointPut = `https://kontroli-back.onrender.com/products/put/${venda.id}`;
 
             let updateProduct = {
                 name: venda.name,

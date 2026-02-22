@@ -3,7 +3,7 @@ import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, L
 import * as XLSX from "xlsx";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
-import Styles from "./relatorio.module.css"
+import Styles from "./Relatorio.module.css"
 import Navbar from "../components/Navbar/Navbar";
 import axios from "axios";
 
@@ -27,7 +27,7 @@ export default function Report() {
 
     // requisições HTTP
     const get = async (diasFiltro = "7") => {
-        let endpoint = "http://127.0.0.1:3000/report/get";
+        let endpoint = "https://kontroli-back.onrender.com/report/get";
         let resp = await axios.get(endpoint);
         let data = await resp.data
 
@@ -127,7 +127,7 @@ export default function Report() {
 
     // ADIÇÃO DO CÓDIGO 1: Requisição para pegar vendedores
     const getSeller = async () => {
-        const endpoint = "http://127.0.0.1:3000/users/get";
+        const endpoint = "https://kontroli-back.onrender.com/users/get";
         const resp = await axios.get(endpoint);
         setVendedorFiltro(resp.data)
     }
